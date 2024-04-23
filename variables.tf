@@ -3,7 +3,7 @@ variable "sp" {
     app_id          = string,
     display_name    = string,
     password        = string,
-    tenant          = sting,
+    tenant          = string,
     subscription_id = string,
   })
   description = "Azure Service Principal"
