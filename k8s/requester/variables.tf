@@ -19,6 +19,7 @@ variable "sp" {
     tenant          = string,
     subscription_id = string,
   })
+  default     = null
   description = "Azure Service Principal"
   nullable    = true
   sensitive   = true
