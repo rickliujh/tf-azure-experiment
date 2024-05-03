@@ -4,6 +4,10 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "3.100.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "3.6.1"
+    }
   }
 
   required_version = ">= 1.1.0"
@@ -20,6 +24,8 @@ provider "azurerm" {
   features {}
 }
 
+provider "random" {}
+
 resource "azurerm_resource_group" "rg" {
   name     = "${var.prefix}k8s-ex" # k8s for experiment
   location = var.location
@@ -27,23 +33,32 @@ resource "azurerm_resource_group" "rg" {
   tags = var.tags
 }
 
+resource "random_id" "workspace" {
+  keepers = {
+    # Generate a new id each time we switch to a new resource group
+    group_name = azurerm_resource_group.rg.name
+  }
+
+  byte_length = 8
+}
+
 resource "azurerm_log_analytics_workspace" "logws" {
-  name                = "${var.prefix}-lagws"
+  name                = "${var.prefix}-k8slogws-${random_id.workspace.hex}"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   sku                 = "PerGB2018"
 }
 
 resource "azurerm_log_analytics_solution" "logsol" {
-  solution_name         = "Containers"
-  workspace_resource_id = azurerm_log_analytics_workspace.logws.id
-  workspace_name        = azurerm_log_analytics_workspace.logws.name
+  solution_name         = "ContainerInsights"
   location              = azurerm_resource_group.rg.location
   resource_group_name   = azurerm_resource_group.rg.name
+  workspace_resource_id = azurerm_log_analytics_workspace.logws.id
+  workspace_name        = azurerm_log_analytics_workspace.logws.name
 
   plan {
     publisher = "Microsoft"
-    product   = "OMSGallery/Containers"
+    product   = "OMSGallery/ContainerInsights"
   }
 }
 
