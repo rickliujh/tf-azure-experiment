@@ -19,7 +19,7 @@ resource "kubernetes_namespace" "ns_requester" {
 resource "kubernetes_deployment_v1" "deploy_requester" {
   metadata {
     name      = "requester-deployment"
-    namespace = kubernetes_namespace.ns_requester.metadata.name
+    namespace = kubernetes_namespace.ns_requester.metadata[0].name
   }
   spec {
     replicas = 20
