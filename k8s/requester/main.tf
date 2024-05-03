@@ -27,11 +27,31 @@ resource "azurerm_resource_group" "rg" {
   tags = var.tags
 }
 
+resource "azurerm_log_analytics_workspace" "logws" {
+  name                = "${var.prefix}-lagws"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  sku                 = "PerGB2018"
+}
+
+resource "azurerm_log_analytics_solution" "logsol" {
+  solution_name         = "containers"
+  workspace_resource_id = azurerm_log_analytics_workspace.logws.id
+  workspace_name        = azurerm_log_analytics_workspace.logws.name
+  location              = azurerm_resource_group.rg.location
+  resource_group_name   = azurerm_resource_group.rg.name
+
+  plan {
+    publisher = "Microsoft"
+    product   = "OMSGallery/Containers"
+  }
+}
+
 resource "azurerm_kubernetes_cluster" "tfk8salpha" {
   name                = "${var.prefix}k8s-alpha"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  dns_prefix          = "${var.prefix}k8s-alpha" 
+  dns_prefix          = "${var.prefix}k8s-alpha"
 
   default_node_pool {
     name       = "default"
@@ -42,6 +62,11 @@ resource "azurerm_kubernetes_cluster" "tfk8salpha" {
 
   identity {
     type = "SystemAssigned"
+  }
+
+  oms_agent {
+    log_analytics_workspace_id      = azurerm_log_analytics_workspace.example.id
+    msi_auth_for_monitoring_enabled = true
   }
 
   tags = var.tags
