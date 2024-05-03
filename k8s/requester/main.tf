@@ -35,7 +35,7 @@ resource "azurerm_log_analytics_workspace" "logws" {
 }
 
 resource "azurerm_log_analytics_solution" "logsol" {
-  solution_name         = "containers"
+  solution_name         = "Containers"
   workspace_resource_id = azurerm_log_analytics_workspace.logws.id
   workspace_name        = azurerm_log_analytics_workspace.logws.name
   location              = azurerm_resource_group.rg.location
