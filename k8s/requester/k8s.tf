@@ -3,11 +3,11 @@ locals {
 }
 
 provider "kubernetes" {
-  host = local.kube_config.clusters[1].cluster.server
+  host = local.kube_config.clusters[0].cluster.server
 
-  client_key             = base64decode(local.kube_config.users[1].user.client-key-data)
-  client_certificate     = base64decode(local.kube_config.users[1].user.client-certificate-data)
-  cluster_ca_certificate = base64decode(local.kube_config.clusters[1].cluster.certificate-authority-data)
+  client_key             = base64decode(local.kube_config.users[0].user.client-key-data)
+  client_certificate     = base64decode(local.kube_config.users[0].user.client-certificate-data)
+  cluster_ca_certificate = base64decode(local.kube_config.clusters[0].cluster.certificate-authority-data)
 }
 
 resource "kubernetes_namespace" "ns_requester" {

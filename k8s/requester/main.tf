@@ -65,7 +65,7 @@ resource "azurerm_kubernetes_cluster" "tfk8salpha" {
   }
 
   oms_agent {
-    log_analytics_workspace_id      = azurerm_log_analytics_workspace.example.id
+    log_analytics_workspace_id      = azurerm_log_analytics_workspace.logws.id
     msi_auth_for_monitoring_enabled = true
   }
 
