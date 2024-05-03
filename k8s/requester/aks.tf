@@ -39,6 +39,7 @@ resource "azurerm_kubernetes_cluster" "tfk8salpha" {
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   dns_prefix          = "${var.prefix}k8s-alpha"
+  monitor_metrics {}
 
   default_node_pool {
     name       = "default"
