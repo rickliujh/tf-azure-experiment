@@ -18,10 +18,6 @@ terraform {
 
 provider "azurerm" {
   features {}
-  client_id       = var.sp.app_id
-  client_secret   = var.sp.password
-  subscription_id = var.sp.subscription_id
-  tenant_id       = var.sp.tenant
 }
 
 resource "azurerm_resource_group" "rg" {
@@ -42,6 +38,7 @@ resource "azurerm_kubernetes_cluster" "tfk8salpha" {
     node_count = 1
     vm_size    = "Standard_D2_v2"
     max_pods   = 250
+    max_count  = 1
   }
 
   identity {

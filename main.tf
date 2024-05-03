@@ -21,21 +21,22 @@ provider "azurerm" {
   client_id       = var.sp.app_id
   client_secret   = var.sp.password
   subscription_id = var.sp.subscription_id
+  tenant_id       = var.sp.tenant
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "myTFResourceGroup"
-  location = "eastus"
+  name     = "${var.prefix}eus_1"
+  location = var.location
 
-  tags = {
-    Environment = "Terraform Getting Started"
-    Team        = "DevOps"
-  }
+  tags = var.tags
 }
 
 resource "azurerm_virtual_network" "vnet" {
-  name                = "myTFVnet"
+  name                = "${var.prefix}vnet"
   address_space       = ["10.0.0.0/16"]
-  location            = "westus2"
+  location            = var.location
   resource_group_name = azurerm_resource_group.rg.name
+
+  tags = var.tags
 }
+

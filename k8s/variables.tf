@@ -20,7 +20,7 @@ variable "sp" {
     subscription_id = string,
   })
   description = "Azure Service Principal"
-  nullable    = false
+  nullable    = true
   sensitive   = true
 }
 
