@@ -1,3 +1,12 @@
+resource "random_id" "storageaccount" {
+  keepers = {
+    # Generate a new id each time we switch to a new resource group
+    group_name = azurerm_resource_group.rg.name
+  }
+
+  byte_length = 8
+}
+
 resource "azurerm_resource_group" "rg" {
   name     = "${var.prefix}backend"
   location = var.location
@@ -6,7 +15,7 @@ resource "azurerm_resource_group" "rg" {
 }
 
 resource "azurerm_storage_account" "tfsa" {
-  name                     = "${var.prefix}state-${random_id.workspace.hex}"
+  name                     = "${var.prefix}state-${random_id.storageaccount.hex}"
   resource_group_name      = azurerm_resource_group.rg.name
   location                 = azurerm_resource_group.rg.location
   account_tier             = "Standard"
