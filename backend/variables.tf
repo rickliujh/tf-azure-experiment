@@ -1,6 +1,6 @@
 variable "prefix" {
   type        = string
-  default     = "tf-"
+  default     = "tf"
   nullable    = false
   description = "the prefix will apply to all resource name"
 }
