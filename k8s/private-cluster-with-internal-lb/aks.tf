@@ -1,15 +1,16 @@
 resource "azurerm_resource_group" "rg" {
-  name     = "${var.prefix}k8s-ex" # k8s for experiment
+  name     = "${var.prefix}k8s-ex-private-pls-internal-lb" # k8s for experiment
   location = var.location
 
   tags = var.tags
 }
 
 resource "azurerm_kubernetes_cluster" "tfk8salpha" {
-  name                = "${var.prefix}k8s-alpha"
+  name                = "${var.prefix}k8s-private-pls-ilb"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   dns_prefix          = "${var.prefix}k8s-alpha"
+  private_cluster_enabled = true
   network_profile {
     network_plugin = "azure"
   }
